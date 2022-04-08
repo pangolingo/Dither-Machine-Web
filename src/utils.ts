@@ -6,6 +6,35 @@ export enum DitherMode {
   Cluster4x4,
   Cluster8x8,
 }
+
+export enum DitherPatterns {
+  Solid,
+  Bayer2,
+  Bayer4,
+  Bayer8,
+  // Chain,
+  // Circles,
+  // Chess,
+  // Commas,
+  // Crosses,
+  // Curls,
+  // Dots,
+  // Feathers,
+  // Fur,
+  // Grid,
+  // Hair,
+  // Halftone,
+  // Lines,
+  // Machine,
+  // Maze,
+  // Metal,
+  // Scales,
+  // Stripes,
+  // Swirls,
+  // Rocky,
+  // Tiles,
+}
+
 export type Color = [number, number, number, number];
 export class Point {
   x: number;

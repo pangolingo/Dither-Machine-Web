@@ -1,8 +1,9 @@
 import { FC, useEffect, useRef } from "react";
+import { CANVAS_SIZE, DRAWING_SIZE } from "./App";
 import { drawFancyGradient } from "./FancyGradient";
 
 type Props = {
-  draw: (ctx: CanvasRenderingContext2D, width: number, height: number) => void;
+  draw: (ctx: CanvasRenderingContext2D) => void;
 };
 
 const Canvas: FC<Props> = ({ draw }) => {
@@ -13,13 +14,11 @@ const Canvas: FC<Props> = ({ draw }) => {
     if (!canvas) {
       return;
     }
-    const context = canvas.getContext("2d")!;
-    const w = canvas.width;
-    const h = canvas.height;
-    draw(context, w, h);
+    const ctx = canvas.getContext("2d")!;
+    draw(ctx);
   }, [draw]);
 
-  return <canvas ref={canvasRef} width="300" height="300" />;
+  return <canvas ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} />;
 };
 
 export default Canvas;

@@ -1,6 +1,27 @@
-import { DitherMode, degreesToRadians, Color, Point, drawPixel, limitToRange } from "./utils";
+import { ColorDither } from "./DitherUtils";
+import {
+  DitherMode,
+  degreesToRadians,
+  Color,
+  Point,
+  drawPixel,
+  limitToRange,
+  DitherPatterns,
+} from "./utils";
 
 const SHOW_RAW_GRADIENT = false;
+
+// fixed diether modes are the non-pattern modes
+function isAFixedDitherMode(ditherMode: DitherMode): boolean {
+  switch (ditherMode) {
+    case DitherMode.None:
+    case DitherMode.Bayer2x2:
+    case DitherMode.Bayer4x4:
+    case DitherMode.Bayer8x8:
+      return true;
+  }
+  return false;
+}
 
 // build the ranges of colors
 // basically categorize the points to color bands in the gradient
@@ -26,20 +47,27 @@ function buildColorRanges(numColors: number, ditherMode: DitherMode): number[] {
   return colorRanges;
 }
 
-export function drawFancyGradient(imageData: ImageData, width: number, height: number, angle: number, colors: Color[]) {
-  const ditherMode = DitherMode.None;
+export function drawFancyGradient(
+  imageData: ImageData,
+  width: number,
+  height: number,
+  angle: number,
+  colors: Color[],
+  ditherMode: DitherMode,
+  // steps = the number of dithering steps between 2 gradient colors
+  steps: number
+) {
   const cos = Math.cos(degreesToRadians(angle));
   const sin = Math.sin(degreesToRadians(angle));
 
   const numColors = colors.length;
   const colorRanges = buildColorRanges(numColors, ditherMode);
-  
 
   for (let x = 0; x < width; x++) {
     for (let y = 0; y < height; y++) {
       // spatialpoint is the pixel we're at right now
       const spatialPoint = new Point(x, y);
-      // this offset helps center the gradient so the angle rotates around 
+      // this offset helps center the gradient so the angle rotates around
       // the middle of the screen
       // I don't understand how it works
       const offset = 0 - 0.5;
@@ -79,8 +107,6 @@ export function drawFancyGradient(imageData: ImageData, width: number, height: n
         }
       }
 
-      // steps = the number of dithering steps between 2 gradient colors
-      const steps = 3;
       let baseRange = pointBaseColor > 0 ? colorRanges[pointBaseColor - 1] : 0;
       let rangeSize = colorRanges[pointBaseColor] - baseRange;
 
@@ -89,7 +115,7 @@ export function drawFancyGradient(imageData: ImageData, width: number, height: n
       const equalize = false; // equalize percentages is off
       if (equalize) {
         pointBaseColor = Math.floor(dist * (numColors - 1));
-          n = ((dist * (numColors - 1)) - pointBaseColor);
+        n = dist * (numColors - 1) - pointBaseColor;
       }
 
       n = Math.floor(n * steps);
@@ -103,12 +129,49 @@ export function drawFancyGradient(imageData: ImageData, width: number, height: n
         n = 0;
       }
 
-      // n will be for dithering later
+      const rotatePat = false;
+      const tx = rotatePat ? newX * width : x;
+      const ty = rotatePat ? newY * height : y;
 
-      if(SHOW_RAW_GRADIENT){
-        drawPixel(imageData, spatialPoint, [dist*255,dist*255,dist*255,255])
+      let dith: boolean;
+
+      if (isAFixedDitherMode(ditherMode)) {
+        switch (ditherMode) {
+          case DitherMode.None:
+            dith = false;
+            break;
+          case DitherMode.Bayer2x2:
+            dith = ColorDither(DitherMode.Bayer2x2, tx, ty, n);
+            break;
+          case DitherMode.Bayer4x4:
+            dith = ColorDither(DitherMode.Bayer4x4, tx, ty, n);
+            break;
+          case DitherMode.Bayer8x8:
+            dith = ColorDither(DitherMode.Bayer8x8, tx, ty, n);
+            break;
+          default:
+            return;
+        }
       } else {
-        drawPixel(imageData, spatialPoint, colors[pointBaseColor]);
+        // TODO:
+        throw new Error("Unhandled ditehr pattern");
+        // var pat = customPatterns[mode - (fixedModes + 1)];
+        // dith = DitherUtils.ColorDither(pat.values, pat.width, pat.height, tx, ty, n);
+      }
+
+      if (SHOW_RAW_GRADIENT) {
+        drawPixel(imageData, spatialPoint, [
+          dist * 255,
+          dist * 255,
+          dist * 255,
+          255,
+        ]);
+      } else {
+        if (dith) {
+          drawPixel(imageData, spatialPoint, colors[pointBaseColor + 1]);
+        } else {
+          drawPixel(imageData, spatialPoint, colors[pointBaseColor]);
+        }
       }
     }
   }
