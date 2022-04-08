@@ -84,48 +84,54 @@ export function drawFancyGradient(
       let dist = newX;
       dist = limitToRange(0, 1, dist);
 
-      // the base color of this pixel
-      let pointBaseColor: number = 0;
+      // FIGURE OUT THE BASE COLOR OF THIS PIXEL (before dithering):
+
+      let baseColor: number = 0;
 
       if (dist >= 1) {
         // if at the end of the gradient:
 
         if (ditherMode === DitherMode.None) {
           // the final color in the gradient
-          pointBaseColor = numColors - 1;
+          baseColor = numColors - 1;
         } else {
           // second to last color in the gradient
-          pointBaseColor = numColors - 2;
+          baseColor = numColors - 2;
         }
       } else {
         // figure out which color this pixel should be
         for (let k = 0; k < numColors; k++) {
           if (dist <= colorRanges[k]) {
-            pointBaseColor = k;
+            baseColor = k;
             break;
           }
         }
       }
 
-      let baseRange = pointBaseColor > 0 ? colorRanges[pointBaseColor - 1] : 0;
-      let rangeSize = colorRanges[pointBaseColor] - baseRange;
+      // TODO: WHAT DOES ALL THIS MEAN???
+      // baseRange is the cutoff point at the bottom of the previous color step
+      let baseRange = baseColor > 0 ? colorRanges[baseColor - 1] : 0;
+      // rangeSize = basically the length of the color step: like from 100-200 or something
+      let rangeSize = colorRanges[baseColor] - baseRange;
 
+      // WHY???
       let n = (dist - baseRange) / rangeSize;
 
-      const equalize = false; // equalize percentages is off
+      // TODO: make equalizing work
+      const equalize = true; // equalize percentages is off
       if (equalize) {
-        pointBaseColor = Math.floor(dist * (numColors - 1));
-        n = dist * (numColors - 1) - pointBaseColor;
+        baseColor = Math.floor(dist * (numColors - 1));
+        n = dist * (numColors - 1) - baseColor;
       }
 
       n = Math.floor(n * steps);
       n /= steps - 1;
 
-      if (pointBaseColor >= numColors) {
-        pointBaseColor = numColors - 1;
+      if (baseColor >= numColors) {
+        baseColor = numColors - 1;
         n = 1;
-      } else if (pointBaseColor < 0) {
-        pointBaseColor = 0;
+      } else if (baseColor < 0) {
+        baseColor = 0;
         n = 0;
       }
 
@@ -133,21 +139,22 @@ export function drawFancyGradient(
       const tx = rotatePat ? newX * width : x;
       const ty = rotatePat ? newY * height : y;
 
-      let dith: boolean;
+      // should we show the base color, or a dithery color?
+      let shouldDither: boolean;
 
       if (isAFixedDitherMode(ditherMode)) {
         switch (ditherMode) {
           case DitherMode.None:
-            dith = false;
+            shouldDither = false;
             break;
           case DitherMode.Bayer2x2:
-            dith = ColorDither(DitherMode.Bayer2x2, tx, ty, n);
+            shouldDither = ColorDither(DitherMode.Bayer2x2, tx, ty, n);
             break;
           case DitherMode.Bayer4x4:
-            dith = ColorDither(DitherMode.Bayer4x4, tx, ty, n);
+            shouldDither = ColorDither(DitherMode.Bayer4x4, tx, ty, n);
             break;
           case DitherMode.Bayer8x8:
-            dith = ColorDither(DitherMode.Bayer8x8, tx, ty, n);
+            shouldDither = ColorDither(DitherMode.Bayer8x8, tx, ty, n);
             break;
           default:
             return;
@@ -167,10 +174,10 @@ export function drawFancyGradient(
           255,
         ]);
       } else {
-        if (dith) {
-          drawPixel(imageData, spatialPoint, colors[pointBaseColor + 1]);
+        if (shouldDither) {
+          drawPixel(imageData, spatialPoint, colors[baseColor + 1]);
         } else {
-          drawPixel(imageData, spatialPoint, colors[pointBaseColor]);
+          drawPixel(imageData, spatialPoint, colors[baseColor]);
         }
       }
     }

@@ -9,20 +9,18 @@ import { Color, DitherMode } from "./utils";
 export const CANVAS_SIZE = 512;
 export const DRAWING_SIZE = 128;
 export const DEFAULT_COLORS: Color[] = [
-  // red
-  [255, 0, 0, 255],
-  // green
-  [0, 255, 0, 255],
-  // blue
-  [0, 0, 255, 255],
-  // yellow
-  [255, 255, 0, 255],
+  // https://colorhunt.co/palette/ff6b6bffd93d6bcb774d96ff
+  [255, 107, 107, 255],
+  [255, 217, 61, 255],
+  [107, 203, 119, 255],
+  [77, 150, 255, 255],
 
   // MORE
-  [99, 58, 52, 255],
-  [24, 23, 28, 255],
-  [161, 35, 18, 255],
-  [125, 132, 113, 255],
+  // https://colorhunt.co/palette/f0ece3dfd3c3c7b198a68dad
+  [240, 236, 227, 255],
+  [223, 211, 195, 255],
+  [199, 177, 152, 255],
+  [166, 141, 173, 255],
 ];
 export const DEFAULT_NUM_COLORS = 4;
 export const MAX_COLORS = 8;
@@ -40,7 +38,6 @@ function App() {
   const draw = (ctx: CanvasRenderingContext2D): void => {
     ctx.imageSmoothingEnabled = false;
     const imageData = ctx.createImageData(DRAWING_SIZE, DRAWING_SIZE);
-    // drawFancyGradient(imageData, width, height, angle, colors, DitherMode.None);
     drawFancyGradient(
       imageData,
       DRAWING_SIZE,

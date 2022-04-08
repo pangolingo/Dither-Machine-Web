@@ -9,3 +9,17 @@ https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258
 
 Vite:
 https://vitejs.dev/guide/#community-templates
+
+## TODO
+
+- select pattern type
+- rotate pattern
+- edit colors (+ reset to defaults)
+- image patterns
+- color percentages, and equalize percentages
+- view gradient checkbox
+- change canvas size
+- export the canvas
+- adjust width and height separately
+- radial gradients
+- custom images instead of gradients (paste in, grayscale source, etc)

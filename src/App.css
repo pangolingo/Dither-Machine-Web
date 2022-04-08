@@ -1,10 +1,12 @@
 html {
-  background-color: lightgray;
+  background-color: rgba(89, 99, 119);
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #ffffff;
+  accent-color: rgb(255, 107, 107);
+}
 }
 
 canvas {
@@ -14,4 +16,17 @@ canvas {
   /* width: 512px;
   height: 512px; */
   image-rendering: pixelated;
+}
+
+label {
+  padding: 1em;
+  display: block;
+  text-align: left;
+}
+
+label > input[type='range'] {
+  margin-left: 1em;
+}
+fieldset {
+  text-align: left;
 }
