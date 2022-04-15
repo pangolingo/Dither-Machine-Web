@@ -4,10 +4,10 @@ import "./App.css";
 import Canvas from "./Canvas";
 import { drawFancyGradient } from "./FancyGradient";
 import Controls from "./Controls";
-import { Color, DitherMode } from "./utils";
+import { Color, Dimensions, DitherMode } from "./utils";
 
-export const CANVAS_SIZE = 512;
-export const DRAWING_SIZE = 128;
+const DEFAULT_CANVAS_DIMENSIONS = new Dimensions(512, 512);
+const DEFAULT_DRAWING_SCALE = 4;
 export const DEFAULT_COLORS: Color[] = [
   // https://colorhunt.co/palette/ff6b6bffd93d6bcb774d96ff
   [255, 107, 107, 255],
@@ -29,20 +29,32 @@ export const DEFAULT_STEPS = 3;
 export const DEFAULT_DITHER_MODE = DitherMode.Bayer8x8;
 
 function App() {
+  const [canvasSize, setCanvasSize] = useState({
+    ...DEFAULT_CANVAS_DIMENSIONS,
+  });
   const [angle, setAngle] = useState(0);
+  const [scale, setScale] = useState(DEFAULT_DRAWING_SCALE);
   const [colors, setColors] = useState<Color[]>(
     DEFAULT_COLORS.slice(0, DEFAULT_NUM_COLORS)
   );
   const [steps, setSteps] = useState(DEFAULT_STEPS);
   const [imageData, setImageData] = useState("");
 
+  const drawingSize = new Dimensions(
+    canvasSize.width / scale,
+    canvasSize.height / scale
+  );
+
   const draw = (ctx: CanvasRenderingContext2D): void => {
     ctx.imageSmoothingEnabled = false;
-    const imageData = ctx.createImageData(DRAWING_SIZE, DRAWING_SIZE);
+    const imageData = ctx.createImageData(
+      drawingSize.width,
+      drawingSize.height
+    );
     drawFancyGradient(
       imageData,
-      DRAWING_SIZE,
-      DRAWING_SIZE,
+      drawingSize.width,
+      drawingSize.height,
       angle,
       colors,
       DEFAULT_DITHER_MODE,
@@ -57,8 +69,8 @@ function App() {
       ctx.canvas,
       0,
       0,
-      DRAWING_SIZE,
-      DRAWING_SIZE, // grab the ImageData part
+      drawingSize.width,
+      drawingSize.height, // grab the ImageData part
       0,
       0,
       ctx.canvas.width,
@@ -82,13 +94,17 @@ function App() {
         steps={steps}
         setSteps={setSteps}
         ditherMode={DEFAULT_DITHER_MODE}
+        canvasSize={canvasSize}
+        setCanvasSize={setCanvasSize}
+        scale={scale}
+        setScale={setScale}
       />
       <div>
         <a download={downloadFilename} href={imageData}>
           Download
         </a>
       </div>
-      <Canvas draw={draw} />
+      <Canvas draw={draw} canvasSize={canvasSize} />
     </div>
   );
 }

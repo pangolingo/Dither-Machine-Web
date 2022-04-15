@@ -20,7 +20,6 @@ https://vitejs.dev/guide/#community-templates
 - image patterns
 - color percentages, and equalize percentages
 - view gradient checkbox
-- change canvas size
-- adjust width and height separately
 - radial gradients
 - custom images instead of gradients (paste in, grayscale source, etc)
+- prettier default values

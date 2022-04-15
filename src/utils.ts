@@ -45,6 +45,15 @@ export class Point {
   }
 }
 
+export class Dimensions {
+  width: number;
+  height: number;
+  constructor(width = 0, height = 0) {
+    this.width = width;
+    this.height = height;
+  }
+}
+
 export function drawPixel(imageData: ImageData, point: Point, color: Color) {
   const i = pointToOffset(point, imageData.width);
   imageData.data[i] = color[0];
@@ -52,7 +61,6 @@ export function drawPixel(imageData: ImageData, point: Point, color: Color) {
   imageData.data[i + 2] = color[2];
   imageData.data[i + 3] = color[3];
 }
-
 
 export function pointToOffset(point: Point, w: number) {
   // 4 offset because each pixel has 4 color bits

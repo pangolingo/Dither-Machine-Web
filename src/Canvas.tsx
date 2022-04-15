@@ -1,12 +1,13 @@
 import { FC, useEffect, useRef } from "react";
-import { CANVAS_SIZE, DRAWING_SIZE } from "./App";
 import { drawFancyGradient } from "./FancyGradient";
+import { Dimensions } from "./utils";
 
 type Props = {
   draw: (ctx: CanvasRenderingContext2D) => void;
+  canvasSize: Dimensions;
 };
 
-const Canvas: FC<Props> = ({ draw }) => {
+const Canvas: FC<Props> = ({ draw, canvasSize }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -18,7 +19,13 @@ const Canvas: FC<Props> = ({ draw }) => {
     draw(ctx);
   }, [draw]);
 
-  return <canvas ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} />;
+  return (
+    <canvas
+      ref={canvasRef}
+      width={canvasSize.width}
+      height={canvasSize.height}
+    />
+  );
 };
 
 export default Canvas;
