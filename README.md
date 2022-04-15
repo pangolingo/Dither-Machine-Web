@@ -34,10 +34,7 @@ A few features from the original Unity app are incomplete.
 
 ## Other possible improvements
 
-- make a github repo
-- deploy it
-- style the UI
+- improve the UI
 - save your custom color palette for later
-- "dither mode" would be more clear as "dither pattern"
 - paste in a hex value to change the color
 - able to type in all input fields next to sliders
