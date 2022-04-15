@@ -33,6 +33,12 @@ const Cluster8x8 = [
   0.640625, 0.859375, 0.609375, 0.5, 0.34375, 0.3125, 0.46875,
 ];
 
+// the bitwise & is a fancy way of doing a modulus operation
+// it only works if the divisor is a power of 2
+// this does a bitwise shift (<<) to move down columns - another fancy trick
+// so basically we're doing a modulus operation to convert the x/y value to a spot in the array
+// x is the array "row" value and y is the array "column" value
+// (even though the array doesn't really have columns, we can pretend it's an NxN array)
 function getLimit(ditherMode: DitherMode, x: number, y: number) {
   switch (ditherMode) {
     case DitherMode.Bayer2x2:
@@ -50,6 +56,8 @@ function getLimit(ditherMode: DitherMode, x: number, y: number) {
   }
 }
 
+// if the value is less than the dither mask value, we use the base color
+// otherwise we use the alternate color
 export function ColorDither(
   ditherMode: DitherMode,
   x: number,

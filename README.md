@@ -23,3 +23,5 @@ https://vitejs.dev/guide/#community-templates
 - radial gradients
 - custom images instead of gradients (paste in, grayscale source, etc)
 - prettier default values
+- deploy it
+- make a github repo

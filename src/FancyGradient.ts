@@ -124,6 +124,8 @@ export function drawFancyGradient(
         n = dist * (numColors - 1) - baseColor;
       }
 
+      // TODO: what is this doing?
+      // some kind of math based on the dither steps
       n = Math.floor(n * steps);
       n /= steps - 1;
 
@@ -135,6 +137,8 @@ export function drawFancyGradient(
         n = 0;
       }
 
+      // if the dither pattern is rotated, we need to change
+      // the pixel we're checking
       const rotatePat = false;
       const tx = rotatePat ? newX * width : x;
       const ty = rotatePat ? newY * height : y;
