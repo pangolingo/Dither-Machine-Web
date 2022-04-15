@@ -3,13 +3,13 @@ html {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  text-align: left;
   color: #ffffff;
   accent-color: rgb(255, 107, 107);
 }
-}
 
 canvas {
+  display: block;
   background-color: darkgray;
   margin: 20px auto;
 
@@ -24,8 +24,9 @@ label {
   text-align: left;
 }
 
-label > input[type='range'] {
-  margin-left: 1em;
+label > input,
+label > select {
+  margin-left: 0.5em;
 }
 fieldset {
   text-align: left;

@@ -11,13 +11,15 @@ import {
 
 const SHOW_RAW_GRADIENT = false;
 
-// fixed diether modes are the non-pattern modes
+// fixed dither modes are the non-pattern modes
 function isAFixedDitherMode(ditherMode: DitherMode): boolean {
   switch (ditherMode) {
     case DitherMode.None:
     case DitherMode.Bayer2x2:
     case DitherMode.Bayer4x4:
     case DitherMode.Bayer8x8:
+    case DitherMode.Cluster4x4:
+    case DitherMode.Cluster8x8:
       return true;
   }
   return false;
@@ -160,12 +162,18 @@ export function drawFancyGradient(
           case DitherMode.Bayer8x8:
             shouldDither = ColorDither(DitherMode.Bayer8x8, tx, ty, n);
             break;
+          case DitherMode.Cluster4x4:
+            shouldDither = ColorDither(DitherMode.Cluster4x4, tx, ty, n);
+            break;
+          case DitherMode.Cluster8x8:
+            shouldDither = ColorDither(DitherMode.Cluster8x8, tx, ty, n);
+            break;
           default:
             return;
         }
       } else {
         // TODO:
-        throw new Error("Unhandled ditehr pattern");
+        throw new Error(`Unhandled dither pattern ${ditherMode}`);
         // var pat = customPatterns[mode - (fixedModes + 1)];
         // dith = DitherUtils.ColorDither(pat.values, pat.width, pat.height, tx, ty, n);
       }

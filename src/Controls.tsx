@@ -5,6 +5,7 @@ import {
   Color,
   Dimensions,
   DitherMode,
+  DitherPatterns,
   hexToRgb,
   limitToRange,
   rgbToHex,
@@ -20,11 +21,57 @@ type Props = {
   steps: number;
   setSteps: (steps: number) => void;
   ditherMode: DitherMode;
+  setDitherMode: (mode: DitherMode) => void;
   canvasSize: Dimensions;
   setCanvasSize: (size: Dimensions) => void;
   scale: number;
   setScale: (scale: number) => void;
 };
+
+function getDitherOptions(): string[] {
+  // if we convert an enum to an array, the array will include both keys and values
+  // we need to only get the keys
+  let options = Object.values(DitherPatterns) as string[];
+  return options.slice(0, options.length / 2);
+}
+
+function ditherOptionToMode(option: string): DitherMode {
+  switch (option) {
+    case "Solid":
+      return DitherMode.None;
+    case "Bayer2":
+      return DitherMode.Bayer2x2;
+    case "Bayer4":
+      return DitherMode.Bayer4x4;
+    case "Bayer8":
+      return DitherMode.Bayer8x8;
+    case "Cluster4":
+      return DitherMode.Cluster4x4;
+    case "Cluster8":
+      return DitherMode.Cluster8x8;
+    default:
+      throw new Error(`Unknown dither option ${option}`);
+  }
+}
+
+function ditherModeToOption(mode: DitherMode): string {
+  switch (mode) {
+    case DitherMode.None:
+      return "Solid";
+    case DitherMode.Bayer2x2:
+      return "Bayer2";
+    case DitherMode.Bayer4x4:
+      return "Bayer4";
+    case DitherMode.Bayer8x8:
+      return "Bayer8";
+    case DitherMode.Cluster4x4:
+      return "Cluster4";
+    case DitherMode.Cluster8x8:
+      return "Cluster8";
+    default:
+      throw new Error(`Unknown dither mode ${mode}`);
+  }
+}
 
 function nearestNunberInArray(num: number, arr: number[]): number {
   return arr.reduce((prev, curr) =>
@@ -67,6 +114,7 @@ const Controls: FC<Props> = ({
   steps,
   setSteps,
   ditherMode,
+  setDitherMode,
   canvasSize,
   setCanvasSize,
   scale,
@@ -158,6 +206,13 @@ const Controls: FC<Props> = ({
 
   const resetColors = () => {
     setColorPalette(DEFAULT_COLOR_PALETTE);
+  };
+
+  const onChangeDitherPattern = (e: ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    const mode = ditherOptionToMode(value);
+    console.log("new mode", value, mode);
+    setDitherMode(mode);
   };
 
   const renderAngleControl = () => {
@@ -293,6 +348,31 @@ const Controls: FC<Props> = ({
     );
   };
 
+  const renderDitherModeControl = () => {
+    const options = getDitherOptions();
+    const selected = ditherModeToOption(ditherMode);
+    return (
+      <div>
+        <label>
+          Dither pattern
+          <select onChange={onChangeDitherPattern}>
+            {options.map((option) => {
+              return (
+                <option
+                  value={option}
+                  key={option}
+                  selected={option === selected}
+                >
+                  {option}
+                </option>
+              );
+            })}
+          </select>
+        </label>
+      </div>
+    );
+  };
+
   return (
     <div>
       {renderAngleControl()}
@@ -300,6 +380,7 @@ const Controls: FC<Props> = ({
       {renderStepsControl()}
       {renderCavasSizeControl()}
       {renderScaleControl()}
+      {renderDitherModeControl()}
     </div>
   );
 };

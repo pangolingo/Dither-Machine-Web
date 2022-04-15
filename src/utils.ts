@@ -12,6 +12,8 @@ export enum DitherPatterns {
   Bayer2,
   Bayer4,
   Bayer8,
+  Cluster4,
+  Cluster8,
   // Chain,
   // Circles,
   // Chess,

@@ -14,13 +14,12 @@ https://vitejs.dev/guide/#community-templates
 
 ## TODO
 
-- select pattern type
 - rotate pattern
 - image patterns
 - color percentages, and equalize percentages
 - view gradient checkbox
 - radial gradients
 - custom images instead of gradients (paste in, grayscale source, etc)
-- prettier default values
 - deploy it
 - make a github repo
+- "dither mode" would be more clear as "dither pattern"

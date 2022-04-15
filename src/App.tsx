@@ -25,14 +25,15 @@ export const DEFAULT_COLOR_PALETTE: Color[] = [
 export const DEFAULT_NUM_COLORS = 4;
 export const MAX_COLORS = DEFAULT_COLOR_PALETTE.length;
 export const MIN_COLORS = 2;
-export const DEFAULT_STEPS = 3;
+export const DEFAULT_ANGLE = 70;
+export const DEFAULT_STEPS = 5;
 export const DEFAULT_DITHER_MODE = DitherMode.Bayer8x8;
 
 function App() {
   const [canvasSize, setCanvasSize] = useState({
     ...DEFAULT_CANVAS_DIMENSIONS,
   });
-  const [angle, setAngle] = useState(0);
+  const [angle, setAngle] = useState(DEFAULT_ANGLE);
   const [scale, setScale] = useState(DEFAULT_DRAWING_SCALE);
   const [colorPalette, setColorPalette] = useState<Color[]>(
     DEFAULT_COLOR_PALETTE
@@ -40,6 +41,7 @@ function App() {
   const [numColors, setNumColors] = useState(DEFAULT_NUM_COLORS);
   const [steps, setSteps] = useState(DEFAULT_STEPS);
   const [imageData, setImageData] = useState("");
+  const [ditherMode, setDitherMode] = useState(DEFAULT_DITHER_MODE);
 
   const drawingSize = new Dimensions(
     canvasSize.width / scale,
@@ -60,7 +62,7 @@ function App() {
       drawingSize.height,
       angle,
       colors,
-      DEFAULT_DITHER_MODE,
+      ditherMode,
       steps
     );
     ctx.putImageData(imageData, 0, 0);
@@ -98,7 +100,8 @@ function App() {
         setColorPalette={setColorPalette}
         steps={steps}
         setSteps={setSteps}
-        ditherMode={DEFAULT_DITHER_MODE}
+        ditherMode={ditherMode}
+        setDitherMode={setDitherMode}
         canvasSize={canvasSize}
         setCanvasSize={setCanvasSize}
         scale={scale}
