@@ -1,3 +1,5 @@
+# Lunar Labs Dither Machine (web port)
+
 Dither Machine:
 https://lunarlabs.itch.io/dither-machine/devlog/72198/dither-machine-is-now-open-source
 
@@ -19,7 +21,6 @@ https://vitejs.dev/guide/#community-templates
 - color percentages, and equalize percentages
 - view gradient checkbox
 - change canvas size
-- export the canvas
 - adjust width and height separately
 - radial gradients
 - custom images instead of gradients (paste in, grayscale source, etc)

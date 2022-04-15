@@ -34,6 +34,7 @@ function App() {
     DEFAULT_COLORS.slice(0, DEFAULT_NUM_COLORS)
   );
   const [steps, setSteps] = useState(DEFAULT_STEPS);
+  const [imageData, setImageData] = useState("");
 
   const draw = (ctx: CanvasRenderingContext2D): void => {
     ctx.imageSmoothingEnabled = false;
@@ -50,6 +51,7 @@ function App() {
     ctx.putImageData(imageData, 0, 0);
 
     // now upscale our image!
+    // https://stackoverflow.com/questions/51387989/change-image-size-with-ctx-putimagedata
     ctx.globalCompositeOperation = "copy";
     ctx.drawImage(
       ctx.canvas,
@@ -62,7 +64,13 @@ function App() {
       ctx.canvas.width,
       ctx.canvas.height // scale it
     );
+
+    // now export the image for downloading
+    const imageDataUrl = ctx.canvas.toDataURL("image/png");
+    setImageData(imageDataUrl);
   };
+
+  const downloadFilename = `${Date.now()}-dither.png`;
 
   return (
     <div className="App">
@@ -75,6 +83,11 @@ function App() {
         setSteps={setSteps}
         ditherMode={DEFAULT_DITHER_MODE}
       />
+      <div>
+        <a download={downloadFilename} href={imageData}>
+          Download
+        </a>
+      </div>
       <Canvas draw={draw} />
     </div>
   );
