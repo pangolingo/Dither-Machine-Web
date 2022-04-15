@@ -16,7 +16,6 @@ https://vitejs.dev/guide/#community-templates
 
 - select pattern type
 - rotate pattern
-- edit colors (+ reset to defaults)
 - image patterns
 - color percentages, and equalize percentages
 - view gradient checkbox

@@ -8,7 +8,7 @@ import { Color, Dimensions, DitherMode } from "./utils";
 
 const DEFAULT_CANVAS_DIMENSIONS = new Dimensions(512, 512);
 const DEFAULT_DRAWING_SCALE = 4;
-export const DEFAULT_COLORS: Color[] = [
+export const DEFAULT_COLOR_PALETTE: Color[] = [
   // https://colorhunt.co/palette/ff6b6bffd93d6bcb774d96ff
   [255, 107, 107, 255],
   [255, 217, 61, 255],
@@ -23,7 +23,7 @@ export const DEFAULT_COLORS: Color[] = [
   [166, 141, 173, 255],
 ];
 export const DEFAULT_NUM_COLORS = 4;
-export const MAX_COLORS = 8;
+export const MAX_COLORS = DEFAULT_COLOR_PALETTE.length;
 export const MIN_COLORS = 2;
 export const DEFAULT_STEPS = 3;
 export const DEFAULT_DITHER_MODE = DitherMode.Bayer8x8;
@@ -34,9 +34,10 @@ function App() {
   });
   const [angle, setAngle] = useState(0);
   const [scale, setScale] = useState(DEFAULT_DRAWING_SCALE);
-  const [colors, setColors] = useState<Color[]>(
-    DEFAULT_COLORS.slice(0, DEFAULT_NUM_COLORS)
+  const [colorPalette, setColorPalette] = useState<Color[]>(
+    DEFAULT_COLOR_PALETTE
   );
+  const [numColors, setNumColors] = useState(DEFAULT_NUM_COLORS);
   const [steps, setSteps] = useState(DEFAULT_STEPS);
   const [imageData, setImageData] = useState("");
 
@@ -44,6 +45,8 @@ function App() {
     canvasSize.width / scale,
     canvasSize.height / scale
   );
+
+  const colors = colorPalette.slice(0, numColors);
 
   const draw = (ctx: CanvasRenderingContext2D): void => {
     ctx.imageSmoothingEnabled = false;
@@ -89,8 +92,10 @@ function App() {
       <Controls
         setAngle={setAngle}
         angle={angle}
-        colors={colors}
-        setColors={setColors}
+        numColors={numColors}
+        setNumColors={setNumColors}
+        colorPalette={colorPalette}
+        setColorPalette={setColorPalette}
         steps={steps}
         setSteps={setSteps}
         ditherMode={DEFAULT_DITHER_MODE}

@@ -20,7 +20,7 @@ canvas {
 
 label {
   padding: 1em;
-  display: block;
+  display: inline-block;
   text-align: left;
 }
 

@@ -1,13 +1,22 @@
 import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
-import { DEFAULT_COLORS, MAX_COLORS, MIN_COLORS } from "./App";
+import { DEFAULT_COLOR_PALETTE, MAX_COLORS, MIN_COLORS } from "./App";
 import { drawFancyGradient } from "./FancyGradient";
-import { Color, Dimensions, DitherMode, limitToRange } from "./utils";
+import {
+  Color,
+  Dimensions,
+  DitherMode,
+  hexToRgb,
+  limitToRange,
+  rgbToHex,
+} from "./utils";
 
 type Props = {
   angle: number;
   setAngle: (angle: number) => void;
-  colors: Color[];
-  setColors: (colors: Color[]) => void;
+  colorPalette: Color[];
+  setColorPalette: (colors: Color[]) => void;
+  numColors: number;
+  setNumColors: (n: number) => void;
   steps: number;
   setSteps: (steps: number) => void;
   ditherMode: DitherMode;
@@ -51,8 +60,10 @@ function getStepsLimits(ditherMode: DitherMode): [number, number] {
 const Controls: FC<Props> = ({
   angle,
   setAngle,
-  colors,
-  setColors,
+  colorPalette,
+  setColorPalette,
+  numColors,
+  setNumColors,
   steps,
   setSteps,
   ditherMode,
@@ -84,18 +95,10 @@ const Controls: FC<Props> = ({
     let newNumColors = parseInt(e.target.value, 10);
     newNumColors = limitToRange(MIN_COLORS, MAX_COLORS, newNumColors);
 
-    if (newNumColors === colors.length) {
+    if (newNumColors === numColors) {
       return;
     }
-    if (newNumColors < colors.length) {
-      const newColors = colors.slice(0, newNumColors);
-      setColors(newColors);
-      return;
-    }
-
-    // const existingColors = [...colors];
-    const otherNewColors = DEFAULT_COLORS.slice(colors.length, newNumColors);
-    setColors([...colors, ...otherNewColors]);
+    setNumColors(newNumColors);
   };
 
   const onStepsChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -146,6 +149,17 @@ const Controls: FC<Props> = ({
     });
   };
 
+  const onColorPaletteChange = (colorIndex: number, newHexColor: string) => {
+    const newColor = hexToRgb(newHexColor);
+    const newColorPalette = [...colorPalette];
+    newColorPalette[colorIndex] = newColor;
+    setColorPalette(newColorPalette);
+  };
+
+  const resetColors = () => {
+    setColorPalette(DEFAULT_COLOR_PALETTE);
+  };
+
   const renderAngleControl = () => {
     return (
       <div>
@@ -176,11 +190,30 @@ const Controls: FC<Props> = ({
             step={1}
             min={MIN_COLORS}
             max={MAX_COLORS}
-            value={colors.length}
+            value={numColors}
             onChange={onNumColorsChange}
           />
-          <input type="text" readOnly value={colors.length} size={4} />
+          <input type="text" readOnly value={numColors} size={4} />
         </label>
+        <div>
+          {colorPalette.slice(0, numColors).map((color, i) => {
+            return (
+              <label key={i}>
+                Color #{i}
+                <input
+                  type="color"
+                  value={rgbToHex(color)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    onColorPaletteChange(i, e.target.value);
+                  }}
+                />
+              </label>
+            );
+          })}
+        </div>
+        <button type="button" onClick={resetColors}>
+          Reset colors to defaults
+        </button>
       </fieldset>
     );
   };
