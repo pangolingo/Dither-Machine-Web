@@ -12,9 +12,6 @@ canvas {
   display: block;
   background-color: darkgray;
   margin: 20px auto;
-
-  /* width: 512px;
-  height: 512px; */
   image-rendering: pixelated;
 }
 
@@ -30,4 +27,23 @@ label > select {
 }
 fieldset {
   text-align: left;
+}
+
+.App {
+  display: flex;
+}
+
+.left-col,
+.right-col {
+  padding: 1em;
+}
+
+.right-col {
+  overflow: auto;
+}
+
+.ColorPalette {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 320px;
 }

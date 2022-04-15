@@ -1,25 +1,43 @@
 # Lunar Labs Dither Machine (web port)
 
-Dither Machine:
-https://lunarlabs.itch.io/dither-machine/devlog/72198/dither-machine-is-now-open-source
+This is a JavaScript/HTML port of the wonderful [Dither Machine by Lunar Labs](https://lunarlabs.itch.io/dither-machine). This is a Unity project to create dithered gradients. It was [released as open source](https://lunarlabs.itch.io/dither-machine/devlog/72198/dither-machine-is-now-open-source) in 2019.
 
-Dither Machine core code:
-https://github.com/Relfos/Dither_Machine/blob/5855e589385d5e2dff4d567960fa05bf3c8bdf31/Assets/Scripts/DitherEditor.cs
+[Dither Machine on Github](https://github.com/Relfos/Dither_Machine)
 
-canvas docs:
-https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258
+The core code is in [DitherEditor.cs](https://github.com/Relfos/Dither_Machine/blob/master/Assets/Scripts/DitherEditor.cs) and [Dither.cs](https://github.com/Relfos/Dither_Machine/blob/master/Assets/Scripts/Dither.cs).
 
-Vite:
-https://vitejs.dev/guide/#community-templates
+This port is a React app running with Vite. It was created with the [Vite React quickstart template](https://vitejs.dev/guide/#community-templates).
 
-## TODO
+I referenced [this helpful article](https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258) for working with `<canvas>` in React.
 
-- rotate pattern
-- image patterns
-- color percentages, and equalize percentages
-- view gradient checkbox
-- radial gradients
-- custom images instead of gradients (paste in, grayscale source, etc)
-- deploy it
+## Features
+
+A few features from the original Unity app are incomplete.
+
+- [x] Linear gradients
+  - [x] Changing the gradient angle
+- [ ] Radial gradients
+  - [ ] Changing the gradient offset
+  - [ ] Changing the gradient scale
+- [ ] Paste-in image to dither
+- [x] Bayer dither patterns
+- [ ] Image-mask dither patterns
+- [ ] Rotating the dither mask
+- [x] Editable colors
+- [x] Changing the number of dither steps
+- [ ] Changing color percentages in the gradient
+  - [ ] Equalizing the color percentages
+- [ ] Swapping color palettes (gameboy, amber, CMYK, rainbow, etc)
+- [x] Exporting images
+- [x] Changing the canvas size
+- [ ] View the undithered gradient in black and white
+
+## Other possible improvements
+
 - make a github repo
+- deploy it
+- style the UI
+- save your custom color palette for later
 - "dither mode" would be more clear as "dither pattern"
+- paste in a hex value to change the color
+- able to type in all input fields next to sliders

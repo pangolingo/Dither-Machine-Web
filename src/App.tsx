@@ -91,28 +91,33 @@ function App() {
 
   return (
     <div className="App">
-      <Controls
-        setAngle={setAngle}
-        angle={angle}
-        numColors={numColors}
-        setNumColors={setNumColors}
-        colorPalette={colorPalette}
-        setColorPalette={setColorPalette}
-        steps={steps}
-        setSteps={setSteps}
-        ditherMode={ditherMode}
-        setDitherMode={setDitherMode}
-        canvasSize={canvasSize}
-        setCanvasSize={setCanvasSize}
-        scale={scale}
-        setScale={setScale}
-      />
-      <div>
-        <a download={downloadFilename} href={imageData}>
-          Download
-        </a>
+      <div className="left-col">
+        <h1>Dither Machine</h1>
+        <Controls
+          setAngle={setAngle}
+          angle={angle}
+          numColors={numColors}
+          setNumColors={setNumColors}
+          colorPalette={colorPalette}
+          setColorPalette={setColorPalette}
+          steps={steps}
+          setSteps={setSteps}
+          ditherMode={ditherMode}
+          setDitherMode={setDitherMode}
+          canvasSize={canvasSize}
+          setCanvasSize={setCanvasSize}
+          scale={scale}
+          setScale={setScale}
+        />
+        <div>
+          <a download={downloadFilename} href={imageData}>
+            Download
+          </a>
+        </div>
       </div>
-      <Canvas draw={draw} canvasSize={canvasSize} />
+      <div className="right-col">
+        <Canvas draw={draw} canvasSize={canvasSize} />
+      </div>
     </div>
   );
 }

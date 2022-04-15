@@ -250,11 +250,11 @@ const Controls: FC<Props> = ({
           />
           <input type="text" readOnly value={numColors} size={4} />
         </label>
-        <div>
+        <div className="ColorPalette">
           {colorPalette.slice(0, numColors).map((color, i) => {
             return (
               <label key={i}>
-                Color #{i}
+                Color #{i + 1}
                 <input
                   type="color"
                   value={rgbToHex(color)}
