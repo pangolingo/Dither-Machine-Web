@@ -7,6 +7,11 @@ export enum DitherMode {
   Cluster8x8,
 }
 
+export enum GradientType {
+  Linear,
+  Radial,
+}
+
 export enum DitherPatterns {
   Solid,
   Bayer2,
@@ -44,6 +49,14 @@ export class Point {
   constructor(x = 0, y = 0) {
     this.x = x;
     this.y = y;
+  }
+
+  subtract(otherPoint: Point) {
+    return new Point(this.x - otherPoint.x, this.y - otherPoint.y);
+  }
+
+  get magnitude() {
+    return Math.sqrt(this.x * this.x + this.y * this.y);
   }
 }
 
@@ -94,11 +107,11 @@ export function rgbToHex(color: Color): string {
   let gStr = g.toString(16);
   let bStr = b.toString(16);
 
-  if (rStr.length == 1) rStr = "0" + rStr;
-  if (gStr.length == 1) gStr = "0" + gStr;
-  if (bStr.length == 1) bStr = "0" + bStr;
+  if (rStr.length == 1) rStr = '0' + rStr;
+  if (gStr.length == 1) gStr = '0' + gStr;
+  if (bStr.length == 1) bStr = '0' + bStr;
 
-  return "#" + rStr + gStr + bStr;
+  return '#' + rStr + gStr + bStr;
 }
 
 export function hexToRgb(hex: string): Color {
@@ -108,15 +121,15 @@ export function hexToRgb(hex: string): Color {
 
   // 3 digits
   if (hex.length == 4) {
-    r = "0x" + hex[1] + hex[1];
-    g = "0x" + hex[2] + hex[2];
-    b = "0x" + hex[3] + hex[3];
+    r = '0x' + hex[1] + hex[1];
+    g = '0x' + hex[2] + hex[2];
+    b = '0x' + hex[3] + hex[3];
 
     // 6 digits
   } else if (hex.length == 7) {
-    r = "0x" + hex[1] + hex[2];
-    g = "0x" + hex[3] + hex[4];
-    b = "0x" + hex[5] + hex[6];
+    r = '0x' + hex[1] + hex[2];
+    g = '0x' + hex[3] + hex[4];
+    b = '0x' + hex[5] + hex[6];
   } else {
     throw new Error(`Unexpected hex length ${hex}`);
   }

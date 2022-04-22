@@ -16,9 +16,9 @@ A few features from the original Unity app are incomplete.
 
 - [x] Linear gradients
   - [x] Changing the gradient angle
-- [ ] Radial gradients
-  - [ ] Changing the gradient offset
-  - [ ] Changing the gradient scale
+- [x] Radial gradients
+  - [x] Changing the gradient offset
+  - [x] Changing the gradient scale
 - [ ] Paste-in image to dither
 - [x] Bayer dither patterns
 - [ ] Image-mask dither patterns

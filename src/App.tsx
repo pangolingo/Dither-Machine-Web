@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Canvas from './Canvas';
 import { drawFancyGradient } from './FancyGradient';
 import Controls from './Controls';
-import { Color, Dimensions, DitherMode } from './utils';
+import { Color, Dimensions, DitherMode, GradientType, Point } from './utils';
 
 const DEFAULT_CANVAS_DIMENSIONS = new Dimensions(512, 512);
 const DEFAULT_DRAWING_SCALE = 4;
@@ -26,6 +26,9 @@ export const MIN_COLORS = 2;
 export const DEFAULT_ANGLE = 70;
 export const DEFAULT_STEPS = 5;
 export const DEFAULT_DITHER_MODE = DitherMode.Bayer8x8;
+export const DEFAULT_GRADIENT_TYPE = GradientType.Linear;
+export const DEFAULT_RADIAL_GRADIENT_POSITION = new Point(0.5, 0.5);
+export const DEFAULT_RADIAL_GRADIENT_SCALE = 0.5;
 
 function App() {
   const [canvasSize, setCanvasSize] = useState({
@@ -41,6 +44,13 @@ function App() {
   const [imageData, setImageData] = useState('');
   const [ditherMode, setDitherMode] = useState(DEFAULT_DITHER_MODE);
   const [rotatePattern, setRotatePattern] = useState(false);
+  const [gradientType, setGradientType] = useState(DEFAULT_GRADIENT_TYPE);
+  const [radialGradientPosition, setRadialGradientPosition] = useState(
+    DEFAULT_RADIAL_GRADIENT_POSITION
+  );
+  const [radialGradientScale, setRadialGradientScale] = useState(
+    DEFAULT_RADIAL_GRADIENT_SCALE
+  );
 
   const drawingSize = new Dimensions(
     canvasSize.width / scale,
@@ -63,7 +73,10 @@ function App() {
       colors,
       ditherMode,
       steps,
-      rotatePattern
+      rotatePattern,
+      gradientType,
+      radialGradientPosition,
+      radialGradientScale
     );
     ctx.putImageData(imageData, 0, 0);
 
@@ -118,6 +131,12 @@ function App() {
           imageData={imageData}
           rotatePattern={rotatePattern}
           setRotatePattern={setRotatePattern}
+          gradientType={gradientType}
+          setGradientType={setGradientType}
+          radialGradientPosition={radialGradientPosition}
+          setRadialGradientPosition={setRadialGradientPosition}
+          radialGradientScale={radialGradientScale}
+          setRadialGradientScale={setRadialGradientScale}
         />
       </div>
       <div className="p-4">

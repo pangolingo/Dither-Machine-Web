@@ -1,13 +1,14 @@
 import { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
 import { DEFAULT_COLOR_PALETTE, MAX_COLORS, MIN_COLORS } from './App';
-import { drawFancyGradient } from './FancyGradient';
 import {
   Color,
   Dimensions,
   DitherMode,
   DitherPatterns,
+  GradientType,
   hexToRgb,
   limitToRange,
+  Point,
   rgbToHex,
 } from './utils';
 
@@ -29,13 +30,41 @@ type Props = {
   imageData: string;
   rotatePattern: boolean;
   setRotatePattern: (rotate: boolean) => void;
+  gradientType: GradientType;
+  setGradientType: (type: GradientType) => void;
+  radialGradientPosition: Point;
+  setRadialGradientPosition: (position: Point) => void;
+  radialGradientScale: number;
+  setRadialGradientScale: (scale: number) => void;
 };
 
-function getDitherOptions(): string[] {
+function enumToStrings(enumToConvert: any): string[] {
   // if we convert an enum to an array, the array will include both keys and values
   // we need to only get the keys
-  let options = Object.values(DitherPatterns) as string[];
+  let options = Object.values(enumToConvert) as string[];
   return options.slice(0, options.length / 2);
+}
+
+function gradientTypeOptionToType(option: string): GradientType {
+  switch (option) {
+    case 'Linear':
+      return GradientType.Linear;
+    case 'Radial':
+      return GradientType.Radial;
+    default:
+      throw new Error(`Unknown gradient type option ${option}`);
+  }
+}
+
+function gradientTypeToOption(type: GradientType): string {
+  switch (type) {
+    case GradientType.Linear:
+      return 'Linear';
+    case GradientType.Radial:
+      return 'Radial';
+    default:
+      throw new Error(`Unknown gradient type ${type}`);
+  }
 }
 
 function ditherOptionToMode(option: string): DitherMode {
@@ -125,6 +154,12 @@ const Controls: FC<Props> = ({
   imageData,
   rotatePattern,
   setRotatePattern,
+  gradientType,
+  setGradientType,
+  radialGradientPosition,
+  setRadialGradientPosition,
+  radialGradientScale,
+  setRadialGradientScale,
 }) => {
   const stepLimits = getStepsLimits(ditherMode);
   // we track local dimensions separately because sometimes a user might enter
@@ -163,6 +198,22 @@ const Controls: FC<Props> = ({
 
   const isValidCanvasSize = (num: number): boolean => {
     return num > 16;
+  };
+
+  const onRadialGradientPositionChange = (
+    xStr: string | null,
+    yStr: string | null
+  ): void => {
+    const x = xStr == null ? radialGradientPosition.x : parseFloat(xStr);
+    const y = yStr == null ? radialGradientPosition.y : parseFloat(yStr);
+    setRadialGradientPosition(new Point(x, y));
+  };
+
+  const onRadialGradientScaleChange = (
+    e: ChangeEvent<HTMLInputElement>
+  ): void => {
+    const scale = parseFloat(e.target.value);
+    setRadialGradientScale(scale);
   };
 
   const onCanvasWidthChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -217,15 +268,20 @@ const Controls: FC<Props> = ({
   const onChangeDitherPattern = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     const mode = ditherOptionToMode(value);
-    console.log('new mode', value, mode);
     setDitherMode(mode);
   };
 
-  const renderAngleControl = () => {
+  const onChangeGradientType = (e: ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    const type = gradientTypeOptionToType(value);
+    setGradientType(type);
+  };
+
+  const renderLinearGradientControls = () => {
     return (
       <div className="grid grid-cols-[150px_auto_100px] mb-4 gap-2">
         <label htmlFor="c-angle" className="block">
-          Angle
+          Gradient angle
         </label>
         <input
           id="c-angle"
@@ -251,7 +307,7 @@ const Controls: FC<Props> = ({
 
   const renderColorsControl = () => {
     return (
-      <div>
+      <div className="mb-5">
         <div className="grid grid-cols-[150px_auto_100px] mb-5 gap-2">
           <label className="block" htmlFor="c-num-colors">
             Number of colors
@@ -308,6 +364,112 @@ const Controls: FC<Props> = ({
             </button>
           </div>
         </fieldset>
+      </div>
+    );
+  };
+
+  const renderGradientTypeControl = () => {
+    const options = enumToStrings(GradientType);
+    const selected = gradientTypeToOption(gradientType);
+    return (
+      <div>
+        <div className="grid grid-cols-[150px_auto_100px] mb-5 gap-2">
+          <label htmlFor="c-gradient-type">Gradient type</label>
+          <select
+            onChange={onChangeGradientType}
+            className="bg-slate-900 px-2 py-1"
+            id="c-gradient-type"
+            value={selected}
+          >
+            {options.map((option) => {
+              return (
+                <option value={option} key={option}>
+                  {option}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+      </div>
+    );
+  };
+
+  const renderRadialGradientControls = () => {
+    return (
+      <div>
+        <div className="grid grid-cols-[150px_auto_100px] mb-4 gap-2">
+          <label htmlFor="c-radial-gradient-x" className="block">
+            Gradient center X
+          </label>
+          <input
+            id="c-radial-gradient-x"
+            type="range"
+            step={0.1}
+            min={-0.5}
+            max={1.5}
+            value={radialGradientPosition.x}
+            onChange={(e) =>
+              onRadialGradientPositionChange(e.target.value, null)
+            }
+          />
+          <div>
+            <input
+              type="text"
+              readOnly
+              value={radialGradientPosition.x}
+              size={4}
+              className="bg-slate-900 px-2 py-1"
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-[150px_auto_100px] mb-4 gap-2">
+          <label htmlFor="c-radial-gradient-y" className="block">
+            Gradient center Y
+          </label>
+          <input
+            id="c-radial-gradient-y"
+            type="range"
+            step={0.1}
+            min={-0.5}
+            max={1.5}
+            value={radialGradientPosition.y}
+            onChange={(e) =>
+              onRadialGradientPositionChange(null, e.target.value)
+            }
+          />
+          <div>
+            <input
+              type="text"
+              readOnly
+              value={radialGradientPosition.y}
+              size={4}
+              className="bg-slate-900 px-2 py-1"
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-[150px_auto_100px] mb-4 gap-2">
+          <label htmlFor="c-radial-gradient-scale" className="block">
+            Gradient scale
+          </label>
+          <input
+            id="c-radial-gradient-scale"
+            type="range"
+            step={0.1}
+            min={0.1}
+            max={2}
+            value={radialGradientScale}
+            onChange={onRadialGradientScaleChange}
+          />
+          <div>
+            <input
+              type="text"
+              readOnly
+              value={radialGradientScale}
+              size={4}
+              className="bg-slate-900 px-2 py-1"
+            />
+          </div>
+        </div>
       </div>
     );
   };
@@ -413,7 +575,7 @@ const Controls: FC<Props> = ({
   };
 
   const renderDitherModeControl = () => {
-    const options = getDitherOptions();
+    const options = enumToStrings(DitherPatterns);
     const selected = ditherModeToOption(ditherMode);
     return (
       <div>
@@ -423,14 +585,11 @@ const Controls: FC<Props> = ({
             onChange={onChangeDitherPattern}
             className="bg-slate-900 px-2 py-1"
             id="c-dither-pattern"
+            value={selected}
           >
             {options.map((option) => {
               return (
-                <option
-                  value={option}
-                  key={option}
-                  selected={option === selected}
-                >
+                <option value={option} key={option}>
                   {option}
                 </option>
               );
@@ -471,9 +630,11 @@ const Controls: FC<Props> = ({
     <div className="flex flex-col space-y-8">
       <fieldset>
         <legend className="font-bold border-b-2 mb-4 block">Gradient</legend>
-        {renderAngleControl()}
+        {renderGradientTypeControl()}
         {renderStepsControl()}
         {renderColorsControl()}
+        {gradientType === GradientType.Linear && renderLinearGradientControls()}
+        {gradientType === GradientType.Radial && renderRadialGradientControls()}
       </fieldset>
       <fieldset>
         <legend className="font-bold border-b-2 mb-4 block">Dither</legend>

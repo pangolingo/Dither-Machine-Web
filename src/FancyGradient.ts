@@ -7,6 +7,7 @@ import {
   drawPixel,
   limitToRange,
   DitherPatterns,
+  GradientType,
 } from './utils';
 
 const SHOW_RAW_GRADIENT = false;
@@ -58,13 +59,24 @@ export function drawFancyGradient(
   ditherMode: DitherMode,
   // steps = the number of dithering steps between 2 gradient colors
   steps: number,
-  rotatePattern: boolean
+  rotatePattern: boolean,
+  gradientType: GradientType,
+  radialGradientPosition: Point,
+  radialGradientScale: number
 ) {
   const cos = Math.cos(degreesToRadians(angle));
   const sin = Math.sin(degreesToRadians(angle));
 
   const numColors = colors.length;
   const colorRanges = buildColorRanges(numColors, ditherMode);
+
+  // take the gradient center percent (0-1)
+  // and convert to a range of
+  // -0.5 to +0.5 where 0 is the center
+  const adjustedRadialGradientCenter = new Point(
+    (0.5 - radialGradientPosition.x) * -1,
+    (0.5 - radialGradientPosition.y) * -1
+  );
 
   for (let x = 0; x < width; x++) {
     for (let y = 0; y < height; y++) {
@@ -83,9 +95,28 @@ export function drawFancyGradient(
       const newX = normalizedPoint.x * cos + normalizedPoint.y * sin - offset;
       const newY = normalizedPoint.x * -sin + normalizedPoint.y * cos - offset;
 
-      // dist is the gradient value (0 to 1) at the spot we're at right now
-      let dist = newX;
-      dist = limitToRange(0, 1, dist);
+      let dist: number;
+
+      // the plus is a hack for typescript to convert the enum to a number that works in a switch statement
+      switch (+gradientType) {
+        case GradientType.Linear:
+          // dist is the gradient value (0 to 1) at the spot we're at right now
+          dist = newX;
+          dist = limitToRange(0, 1, dist);
+          break;
+        case GradientType.Radial:
+          // calculate how far away this point is from the center of the gradient
+          dist =
+            adjustedRadialGradientCenter.subtract(normalizedPoint).magnitude;
+          // adjust for the gradient scale
+          dist /= radialGradientScale;
+          dist = limitToRange(0, 1, dist);
+          // this commented out line changes the order of the colors (inner to outer)
+          // dist = 1 - dist;
+          break;
+        default:
+          throw new Error('Unexpected gradient type');
+      }
 
       // FIGURE OUT THE BASE COLOR OF THIS PIXEL (before dithering):
 
