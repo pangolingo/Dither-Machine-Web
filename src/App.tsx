@@ -86,8 +86,8 @@ function App() {
   };
 
   return (
-    <div className="flex">
-      <div className="p-4">
+    <div className="flex flex-col sm:flex-row">
+      <div className="p-4 w-[30%] min-w-[400px]">
         <h1 className="mb-1 text-4xl font-bold">Dither Machine</h1>
         <p className="mb-8">
           A port of{' '}

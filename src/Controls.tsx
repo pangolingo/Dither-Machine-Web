@@ -232,13 +232,15 @@ const Controls: FC<Props> = ({
           value={angle}
           onChange={onAngleChange}
         />
-        <input
-          type="text"
-          readOnly
-          value={angle}
-          size={4}
-          className="bg-slate-900 px-2 py-1"
-        />
+        <div>
+          <input
+            type="text"
+            readOnly
+            value={angle}
+            size={4}
+            className="bg-slate-900 px-2 py-1"
+          />
+        </div>
       </div>
     );
   };
@@ -256,18 +258,20 @@ const Controls: FC<Props> = ({
             value={numColors}
             onChange={onNumColorsChange}
           />
-          <input
-            type="text"
-            readOnly
-            value={numColors}
-            size={4}
-            className="bg-slate-900 px-2 py-1"
-          />
+          <div>
+            <input
+              type="text"
+              readOnly
+              value={numColors}
+              size={4}
+              className="bg-slate-900 px-2 py-1"
+            />
+          </div>
         </div>
 
         <fieldset className="">
           <legend className="sr-only">Colors</legend>
-          <div className="flex mb-2">
+          <div className="flex mb-2 flex-wrap">
             {colorPalette.slice(0, numColors).map((color, i) => {
               return (
                 <div key={i}>
@@ -313,13 +317,15 @@ const Controls: FC<Props> = ({
           value={steps}
           onChange={onStepsChange}
         />
-        <input
-          type="text"
-          readOnly
-          value={steps}
-          size={4}
-          className="bg-slate-900 px-2 py-1"
-        />
+        <div>
+          <input
+            type="text"
+            readOnly
+            value={steps}
+            size={4}
+            className="bg-slate-900 px-2 py-1"
+          />
+        </div>
       </div>
     );
   };
@@ -328,29 +334,33 @@ const Controls: FC<Props> = ({
     return (
       <fieldset>
         <legend className="sr-only">Canvas size</legend>
-        <div className="grid grid-cols-[150px_100px] mb-5 gap-2">
+        <div className="grid grid-cols-[150px_auto] mb-5 gap-2">
           <label>Width</label>
-          <input
-            type="number"
-            step={10}
-            min={10}
-            value={localCanvasSize.width}
-            onChange={onCanvasWidthChange}
-            className="bg-slate-900 px-2 py-1"
-            size={4}
-          />
+          <div>
+            <input
+              type="number"
+              step={10}
+              min={10}
+              value={localCanvasSize.width}
+              onChange={onCanvasWidthChange}
+              className="bg-slate-900 px-2 py-1 w-[5em]"
+              size={4}
+            />
+          </div>
         </div>
-        <div className="grid grid-cols-[150px_100px] mb-5 gap-2">
+        <div className="grid grid-cols-[150px_auto] mb-5 gap-2">
           <label>Height</label>
-          <input
-            type="number"
-            step={10}
-            min={10}
-            value={localCanvasSize.height}
-            onChange={onCanvasHeightChange}
-            className="bg-slate-900 px-2 py-1"
-            size={4}
-          />
+          <div>
+            <input
+              type="number"
+              step={10}
+              min={10}
+              value={localCanvasSize.height}
+              onChange={onCanvasHeightChange}
+              className="bg-slate-900 px-2 py-1 w-[5em]"
+              size={4}
+            />
+          </div>
         </div>
       </fieldset>
     );
@@ -369,20 +379,22 @@ const Controls: FC<Props> = ({
           onChange={onScaleChange}
           list="scale-values"
         />
-        <datalist id="scale-values">
-          <option value="1"></option>
-          <option value="2"></option>
-          <option value="4"></option>
-          <option value="8"></option>
-          <option value="16"></option>
-        </datalist>
-        <input
-          type="text"
-          readOnly
-          value={scale}
-          size={4}
-          className="bg-slate-900 px-2 py-1"
-        />
+        <div>
+          <datalist id="scale-values">
+            <option value="1"></option>
+            <option value="2"></option>
+            <option value="4"></option>
+            <option value="8"></option>
+            <option value="16"></option>
+          </datalist>
+          <input
+            type="text"
+            readOnly
+            value={scale}
+            size={4}
+            className="bg-slate-900 px-2 py-1"
+          />
+        </div>
       </div>
     );
   };
