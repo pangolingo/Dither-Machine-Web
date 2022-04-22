@@ -224,11 +224,11 @@ const Controls: FC<Props> = ({
   const renderAngleControl = () => {
     return (
       <div className="grid grid-cols-[150px_auto_100px] mb-4 gap-2">
-        <label htmlFor="angle" className="block">
+        <label htmlFor="c-angle" className="block">
           Angle
         </label>
         <input
-          id="angle"
+          id="c-angle"
           type="range"
           step={1}
           min={0}
@@ -253,7 +253,9 @@ const Controls: FC<Props> = ({
     return (
       <div>
         <div className="grid grid-cols-[150px_auto_100px] mb-5 gap-2">
-          <label className="block">Number of colors</label>
+          <label className="block" htmlFor="c-num-colors">
+            Number of colors
+          </label>
           <input
             type="range"
             step={1}
@@ -261,6 +263,7 @@ const Controls: FC<Props> = ({
             max={MAX_COLORS}
             value={numColors}
             onChange={onNumColorsChange}
+            id="c-num-colors"
           />
           <div>
             <input
@@ -279,11 +282,11 @@ const Controls: FC<Props> = ({
             {colorPalette.slice(0, numColors).map((color, i) => {
               return (
                 <div key={i}>
-                  <label className="sr-only" htmlFor={`color-${i}`}>
+                  <label className="sr-only" htmlFor={`c-color-${i}`}>
                     Color #{i + 1}
                   </label>
                   <input
-                    id={`color-id`}
+                    id={`c-color-id`}
                     type="color"
                     value={rgbToHex(color)}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -312,7 +315,9 @@ const Controls: FC<Props> = ({
   const renderStepsControl = () => {
     return (
       <div className="grid grid-cols-[150px_auto_100px] mb-5 gap-2">
-        <label className="">Steps</label>
+        <label className="" htmlFor="c-num-steps">
+          Steps
+        </label>
         <input
           type="range"
           step={1}
@@ -320,6 +325,7 @@ const Controls: FC<Props> = ({
           max={stepLimits[1]}
           value={steps}
           onChange={onStepsChange}
+          id="c-num-steps"
         />
         <div>
           <input
@@ -339,7 +345,7 @@ const Controls: FC<Props> = ({
       <fieldset>
         <legend className="sr-only">Canvas size</legend>
         <div className="grid grid-cols-[150px_auto] mb-5 gap-2">
-          <label>Width</label>
+          <label htmlFor="c-width">Width</label>
           <div>
             <input
               type="number"
@@ -349,11 +355,12 @@ const Controls: FC<Props> = ({
               onChange={onCanvasWidthChange}
               className="bg-slate-900 px-2 py-1 w-[5em]"
               size={4}
+              id="c-width"
             />
           </div>
         </div>
         <div className="grid grid-cols-[150px_auto] mb-5 gap-2">
-          <label>Height</label>
+          <label htmlFor="c-height">Height</label>
           <div>
             <input
               type="number"
@@ -363,6 +370,7 @@ const Controls: FC<Props> = ({
               onChange={onCanvasHeightChange}
               className="bg-slate-900 px-2 py-1 w-[5em]"
               size={4}
+              id="c-height"
             />
           </div>
         </div>
@@ -373,7 +381,7 @@ const Controls: FC<Props> = ({
   const renderScaleControl = () => {
     return (
       <div className="grid grid-cols-[150px_auto_100px] mb-5 gap-2">
-        <label>Scale</label>
+        <label htmlFor="c-scale">Scale</label>
         <input
           type="range"
           step={1}
@@ -381,10 +389,11 @@ const Controls: FC<Props> = ({
           max={16}
           value={scale}
           onChange={onScaleChange}
-          list="scale-values"
+          list="c-scale-values"
+          id="c-scale"
         />
         <div>
-          <datalist id="scale-values">
+          <datalist id="c-scale-values">
             <option value="1"></option>
             <option value="2"></option>
             <option value="4"></option>
@@ -407,11 +416,13 @@ const Controls: FC<Props> = ({
     const options = getDitherOptions();
     const selected = ditherModeToOption(ditherMode);
     return (
+      <div>
         <div className="grid grid-cols-[150px_auto_100px] mb-5 gap-2">
-        <label>Dither pattern</label>
+          <label htmlFor="c-dither-pattern">Dither pattern</label>
           <select
             onChange={onChangeDitherPattern}
             className="bg-slate-900 px-2 py-1"
+            id="c-dither-pattern"
           >
             {options.map((option) => {
               return (
