@@ -1,10 +1,10 @@
 # Lunar Labs Dither Machine (web port)
 
-This is a JavaScript/HTML port of the wonderful [Dither Machine by Lunar Labs](https://lunarlabs.itch.io/dither-machine). This is a Unity project to create dithered gradients. It was [released as open source](https://lunarlabs.itch.io/dither-machine/devlog/72198/dither-machine-is-now-open-source) in 2019.
+[Try it out online!](https://dither-machine.netlify.app/)
 
-[Dither Machine on Github](https://github.com/Relfos/Dither_Machine)
+This is a JavaScript/HTML port of the wonderful [Dither Machine by Lunar Labs](https://lunarlabs.itch.io/dither-machine). Dither Machine is a Unity project to create dithered gradients. It was [released as open source](https://lunarlabs.itch.io/dither-machine/devlog/72198/dither-machine-is-now-open-source) in 2019.
 
-The core code is in [DitherEditor.cs](https://github.com/Relfos/Dither_Machine/blob/master/Assets/Scripts/DitherEditor.cs) and [Dither.cs](https://github.com/Relfos/Dither_Machine/blob/master/Assets/Scripts/Dither.cs).
+[The original Dither Machine on Github](https://github.com/Relfos/Dither_Machine). The core code is in [DitherEditor.cs](https://github.com/Relfos/Dither_Machine/blob/master/Assets/Scripts/DitherEditor.cs) and [Dither.cs](https://github.com/Relfos/Dither_Machine/blob/master/Assets/Scripts/Dither.cs).
 
 This port is a React app running with Vite. It was created with the [Vite React quickstart template](https://vitejs.dev/guide/#community-templates).
 
