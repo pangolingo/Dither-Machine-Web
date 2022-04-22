@@ -1,4 +1,4 @@
-import { ColorDither } from "./DitherUtils";
+import { ColorDither } from './DitherUtils';
 import {
   DitherMode,
   degreesToRadians,
@@ -7,7 +7,7 @@ import {
   drawPixel,
   limitToRange,
   DitherPatterns,
-} from "./utils";
+} from './utils';
 
 const SHOW_RAW_GRADIENT = false;
 
@@ -57,7 +57,8 @@ export function drawFancyGradient(
   colors: Color[],
   ditherMode: DitherMode,
   // steps = the number of dithering steps between 2 gradient colors
-  steps: number
+  steps: number,
+  rotatePattern: boolean
 ) {
   const cos = Math.cos(degreesToRadians(angle));
   const sin = Math.sin(degreesToRadians(angle));
@@ -141,9 +142,8 @@ export function drawFancyGradient(
 
       // if the dither pattern is rotated, we need to change
       // the pixel we're checking
-      const rotatePat = false;
-      const tx = rotatePat ? newX * width : x;
-      const ty = rotatePat ? newY * height : y;
+      const tx = rotatePattern ? newX * width : x;
+      const ty = rotatePattern ? newY * height : y;
 
       // should we show the base color, or a dithery color?
       let shouldDither: boolean;

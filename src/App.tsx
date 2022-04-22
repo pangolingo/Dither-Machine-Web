@@ -40,6 +40,7 @@ function App() {
   const [steps, setSteps] = useState(DEFAULT_STEPS);
   const [imageData, setImageData] = useState('');
   const [ditherMode, setDitherMode] = useState(DEFAULT_DITHER_MODE);
+  const [rotatePattern, setRotatePattern] = useState(false);
 
   const drawingSize = new Dimensions(
     canvasSize.width / scale,
@@ -61,7 +62,8 @@ function App() {
       angle,
       colors,
       ditherMode,
-      steps
+      steps,
+      rotatePattern
     );
     ctx.putImageData(imageData, 0, 0);
 
@@ -114,6 +116,8 @@ function App() {
           scale={scale}
           setScale={setScale}
           imageData={imageData}
+          rotatePattern={rotatePattern}
+          setRotatePattern={setRotatePattern}
         />
       </div>
       <div className="p-4">

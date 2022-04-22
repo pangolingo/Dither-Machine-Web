@@ -22,7 +22,7 @@ A few features from the original Unity app are incomplete.
 - [ ] Paste-in image to dither
 - [x] Bayer dither patterns
 - [ ] Image-mask dither patterns
-- [ ] Rotating the dither mask
+- [x] Rotating the dither mask
 - [x] Editable colors
 - [x] Changing the number of dither steps
 - [ ] Changing color percentages in the gradient

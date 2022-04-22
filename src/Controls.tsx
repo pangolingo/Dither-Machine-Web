@@ -27,6 +27,8 @@ type Props = {
   scale: number;
   setScale: (scale: number) => void;
   imageData: string;
+  rotatePattern: boolean;
+  setRotatePattern: (rotate: boolean) => void;
 };
 
 function getDitherOptions(): string[] {
@@ -121,6 +123,8 @@ const Controls: FC<Props> = ({
   scale,
   setScale,
   imageData,
+  rotatePattern,
+  setRotatePattern,
 }) => {
   const stepLimits = getStepsLimits(ditherMode);
   // we track local dimensions separately because sometimes a user might enter
@@ -403,24 +407,36 @@ const Controls: FC<Props> = ({
     const options = getDitherOptions();
     const selected = ditherModeToOption(ditherMode);
     return (
-      <div className="grid grid-cols-[150px_auto_100px] mb-5 gap-2">
+        <div className="grid grid-cols-[150px_auto_100px] mb-5 gap-2">
         <label>Dither pattern</label>
-        <select
-          onChange={onChangeDitherPattern}
-          className="bg-slate-900 px-2 py-1"
-        >
-          {options.map((option) => {
-            return (
-              <option
-                value={option}
-                key={option}
-                selected={option === selected}
-              >
-                {option}
-              </option>
-            );
-          })}
-        </select>
+          <select
+            onChange={onChangeDitherPattern}
+            className="bg-slate-900 px-2 py-1"
+          >
+            {options.map((option) => {
+              return (
+                <option
+                  value={option}
+                  key={option}
+                  selected={option === selected}
+                >
+                  {option}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+        <div className="grid grid-cols-[150px_auto_100px] mb-5 gap-2">
+          <label htmlFor="c-rotate-pattern">Rotate pattern</label>
+          <div>
+            <input
+              type="checkbox"
+              checked={rotatePattern}
+              onChange={(e) => setRotatePattern(e.target.checked)}
+              id="c-rotate-pattern"
+            />
+          </div>
+        </div>
       </div>
     );
   };
