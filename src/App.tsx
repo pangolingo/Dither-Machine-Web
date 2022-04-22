@@ -1,10 +1,8 @@
-import { useState } from "react";
-import logo from "./logo.svg";
-import "./App.css";
-import Canvas from "./Canvas";
-import { drawFancyGradient } from "./FancyGradient";
-import Controls from "./Controls";
-import { Color, Dimensions, DitherMode } from "./utils";
+import { useState } from 'react';
+import Canvas from './Canvas';
+import { drawFancyGradient } from './FancyGradient';
+import Controls from './Controls';
+import { Color, Dimensions, DitherMode } from './utils';
 
 const DEFAULT_CANVAS_DIMENSIONS = new Dimensions(512, 512);
 const DEFAULT_DRAWING_SCALE = 4;
@@ -40,7 +38,7 @@ function App() {
   );
   const [numColors, setNumColors] = useState(DEFAULT_NUM_COLORS);
   const [steps, setSteps] = useState(DEFAULT_STEPS);
-  const [imageData, setImageData] = useState("");
+  const [imageData, setImageData] = useState('');
   const [ditherMode, setDitherMode] = useState(DEFAULT_DITHER_MODE);
 
   const drawingSize = new Dimensions(
@@ -69,7 +67,7 @@ function App() {
 
     // now upscale our image!
     // https://stackoverflow.com/questions/51387989/change-image-size-with-ctx-putimagedata
-    ctx.globalCompositeOperation = "copy";
+    ctx.globalCompositeOperation = 'copy';
     ctx.drawImage(
       ctx.canvas,
       0,
@@ -83,16 +81,23 @@ function App() {
     );
 
     // now export the image for downloading
-    const imageDataUrl = ctx.canvas.toDataURL("image/png");
+    const imageDataUrl = ctx.canvas.toDataURL('image/png');
     setImageData(imageDataUrl);
   };
 
-  const downloadFilename = `${Date.now()}-dither.png`;
-
   return (
-    <div className="App">
-      <div className="left-col">
-        <h1>Dither Machine</h1>
+    <div className="flex">
+      <div className="p-4">
+        <h1 className="mb-1 text-4xl font-bold">Dither Machine</h1>
+        <p className="mb-8">
+          A port of{' '}
+          <a
+            href="https://lunarlabs.itch.io/dither-machine"
+            className="underline font-bold"
+          >
+            Dither Machine by Lunar Labs
+          </a>
+        </p>
         <Controls
           setAngle={setAngle}
           angle={angle}
@@ -108,14 +113,10 @@ function App() {
           setCanvasSize={setCanvasSize}
           scale={scale}
           setScale={setScale}
+          imageData={imageData}
         />
-        <div>
-          <a download={downloadFilename} href={imageData}>
-            Download
-          </a>
-        </div>
       </div>
-      <div className="right-col">
+      <div className="p-4">
         <Canvas draw={draw} canvasSize={canvasSize} />
       </div>
     </div>

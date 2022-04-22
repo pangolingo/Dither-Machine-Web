@@ -34,7 +34,6 @@ A few features from the original Unity app are incomplete.
 
 ## Other possible improvements
 
-- improve the UI
 - save your custom color palette for later
 - paste in a hex value to change the color
 - able to type in all input fields next to sliders

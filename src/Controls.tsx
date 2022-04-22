@@ -1,6 +1,6 @@
-import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
-import { DEFAULT_COLOR_PALETTE, MAX_COLORS, MIN_COLORS } from "./App";
-import { drawFancyGradient } from "./FancyGradient";
+import { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
+import { DEFAULT_COLOR_PALETTE, MAX_COLORS, MIN_COLORS } from './App';
+import { drawFancyGradient } from './FancyGradient';
 import {
   Color,
   Dimensions,
@@ -9,7 +9,7 @@ import {
   hexToRgb,
   limitToRange,
   rgbToHex,
-} from "./utils";
+} from './utils';
 
 type Props = {
   angle: number;
@@ -26,6 +26,7 @@ type Props = {
   setCanvasSize: (size: Dimensions) => void;
   scale: number;
   setScale: (scale: number) => void;
+  imageData: string;
 };
 
 function getDitherOptions(): string[] {
@@ -37,17 +38,17 @@ function getDitherOptions(): string[] {
 
 function ditherOptionToMode(option: string): DitherMode {
   switch (option) {
-    case "Solid":
+    case 'Solid':
       return DitherMode.None;
-    case "Bayer2":
+    case 'Bayer2':
       return DitherMode.Bayer2x2;
-    case "Bayer4":
+    case 'Bayer4':
       return DitherMode.Bayer4x4;
-    case "Bayer8":
+    case 'Bayer8':
       return DitherMode.Bayer8x8;
-    case "Cluster4":
+    case 'Cluster4':
       return DitherMode.Cluster4x4;
-    case "Cluster8":
+    case 'Cluster8':
       return DitherMode.Cluster8x8;
     default:
       throw new Error(`Unknown dither option ${option}`);
@@ -57,17 +58,17 @@ function ditherOptionToMode(option: string): DitherMode {
 function ditherModeToOption(mode: DitherMode): string {
   switch (mode) {
     case DitherMode.None:
-      return "Solid";
+      return 'Solid';
     case DitherMode.Bayer2x2:
-      return "Bayer2";
+      return 'Bayer2';
     case DitherMode.Bayer4x4:
-      return "Bayer4";
+      return 'Bayer4';
     case DitherMode.Bayer8x8:
-      return "Bayer8";
+      return 'Bayer8';
     case DitherMode.Cluster4x4:
-      return "Cluster4";
+      return 'Cluster4';
     case DitherMode.Cluster8x8:
-      return "Cluster8";
+      return 'Cluster8';
     default:
       throw new Error(`Unknown dither mode ${mode}`);
   }
@@ -119,6 +120,7 @@ const Controls: FC<Props> = ({
   setCanvasSize,
   scale,
   setScale,
+  imageData,
 }) => {
   const stepLimits = getStepsLimits(ditherMode);
   // we track local dimensions separately because sometimes a user might enter
@@ -211,35 +213,41 @@ const Controls: FC<Props> = ({
   const onChangeDitherPattern = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     const mode = ditherOptionToMode(value);
-    console.log("new mode", value, mode);
+    console.log('new mode', value, mode);
     setDitherMode(mode);
   };
 
   const renderAngleControl = () => {
     return (
-      <div>
-        <label>
+      <div className="grid grid-cols-[150px_auto_100px] mb-4 gap-2">
+        <label htmlFor="angle" className="block">
           Angle
-          <input
-            type="range"
-            step={1}
-            min={0}
-            max={360}
-            value={angle}
-            onChange={onAngleChange}
-          />
-          <input type="text" readOnly value={angle} size={4} />
         </label>
+        <input
+          id="angle"
+          type="range"
+          step={1}
+          min={0}
+          max={360}
+          value={angle}
+          onChange={onAngleChange}
+        />
+        <input
+          type="text"
+          readOnly
+          value={angle}
+          size={4}
+          className="bg-slate-900 px-2 py-1"
+        />
       </div>
     );
   };
 
   const renderColorsControl = () => {
     return (
-      <fieldset>
-        <legend>Colors</legend>
-        <label>
-          Number of colors
+      <div>
+        <div className="grid grid-cols-[150px_auto_100px] mb-5 gap-2">
+          <label className="block">Number of colors</label>
           <input
             type="range"
             step={1}
@@ -248,46 +256,70 @@ const Controls: FC<Props> = ({
             value={numColors}
             onChange={onNumColorsChange}
           />
-          <input type="text" readOnly value={numColors} size={4} />
-        </label>
-        <div className="ColorPalette">
-          {colorPalette.slice(0, numColors).map((color, i) => {
-            return (
-              <label key={i}>
-                Color #{i + 1}
-                <input
-                  type="color"
-                  value={rgbToHex(color)}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    onColorPaletteChange(i, e.target.value);
-                  }}
-                />
-              </label>
-            );
-          })}
+          <input
+            type="text"
+            readOnly
+            value={numColors}
+            size={4}
+            className="bg-slate-900 px-2 py-1"
+          />
         </div>
-        <button type="button" onClick={resetColors}>
-          Reset colors to defaults
-        </button>
-      </fieldset>
+
+        <fieldset className="">
+          <legend className="sr-only">Colors</legend>
+          <div className="flex mb-2">
+            {colorPalette.slice(0, numColors).map((color, i) => {
+              return (
+                <div key={i}>
+                  <label className="sr-only" htmlFor={`color-${i}`}>
+                    Color #{i + 1}
+                  </label>
+                  <input
+                    id={`color-id`}
+                    type="color"
+                    value={rgbToHex(color)}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                      onColorPaletteChange(i, e.target.value);
+                    }}
+                    className="bg-slate-900"
+                  />
+                </div>
+              );
+            })}
+          </div>
+          <div>
+            <button
+              type="button"
+              onClick={resetColors}
+              className="inline-flex items-center px-2 py-2 border border-transparent text-base leading-4 rounded-md shadow-sm text-white bg-slate-500 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500"
+            >
+              Reset colors to defaults
+            </button>
+          </div>
+        </fieldset>
+      </div>
     );
   };
 
   const renderStepsControl = () => {
     return (
-      <div>
-        <label>
-          Steps
-          <input
-            type="range"
-            step={1}
-            min={stepLimits[0]}
-            max={stepLimits[1]}
-            value={steps}
-            onChange={onStepsChange}
-          />
-          <input type="text" readOnly value={steps} size={4} />
-        </label>
+      <div className="grid grid-cols-[150px_auto_100px] mb-5 gap-2">
+        <label className="">Steps</label>
+        <input
+          type="range"
+          step={1}
+          min={stepLimits[0]}
+          max={stepLimits[1]}
+          value={steps}
+          onChange={onStepsChange}
+        />
+        <input
+          type="text"
+          readOnly
+          value={steps}
+          size={4}
+          className="bg-slate-900 px-2 py-1"
+        />
       </div>
     );
   };
@@ -295,55 +327,62 @@ const Controls: FC<Props> = ({
   const renderCavasSizeControl = () => {
     return (
       <fieldset>
-        <legend>Canvas size</legend>
-        <label>
-          Width
+        <legend className="sr-only">Canvas size</legend>
+        <div className="grid grid-cols-[150px_100px] mb-5 gap-2">
+          <label>Width</label>
           <input
             type="number"
             step={10}
             min={10}
             value={localCanvasSize.width}
             onChange={onCanvasWidthChange}
+            className="bg-slate-900 px-2 py-1"
+            size={4}
           />
-        </label>
-
-        <label>
-          Height
+        </div>
+        <div className="grid grid-cols-[150px_100px] mb-5 gap-2">
+          <label>Height</label>
           <input
             type="number"
             step={10}
             min={10}
             value={localCanvasSize.height}
             onChange={onCanvasHeightChange}
+            className="bg-slate-900 px-2 py-1"
+            size={4}
           />
-        </label>
+        </div>
       </fieldset>
     );
   };
 
   const renderScaleControl = () => {
     return (
-      <div>
-        <label>
-          Scale
-          <input
-            type="range"
-            step={1}
-            min={1}
-            max={16}
-            value={scale}
-            onChange={onScaleChange}
-            list="scale-values"
-          />
-          <datalist id="scale-values">
-            <option value="1"></option>
-            <option value="2"></option>
-            <option value="4"></option>
-            <option value="8"></option>
-            <option value="16"></option>
-          </datalist>
-          <input type="text" readOnly value={scale} size={4} />
-        </label>
+      <div className="grid grid-cols-[150px_auto_100px] mb-5 gap-2">
+        <label>Scale</label>
+        <input
+          type="range"
+          step={1}
+          min={1}
+          max={16}
+          value={scale}
+          onChange={onScaleChange}
+          list="scale-values"
+        />
+        <datalist id="scale-values">
+          <option value="1"></option>
+          <option value="2"></option>
+          <option value="4"></option>
+          <option value="8"></option>
+          <option value="16"></option>
+        </datalist>
+        <input
+          type="text"
+          readOnly
+          value={scale}
+          size={4}
+          className="bg-slate-900 px-2 py-1"
+        />
       </div>
     );
   };
@@ -352,35 +391,61 @@ const Controls: FC<Props> = ({
     const options = getDitherOptions();
     const selected = ditherModeToOption(ditherMode);
     return (
+      <div className="grid grid-cols-[150px_auto_100px] mb-5 gap-2">
+        <label>Dither pattern</label>
+        <select
+          onChange={onChangeDitherPattern}
+          className="bg-slate-900 px-2 py-1"
+        >
+          {options.map((option) => {
+            return (
+              <option
+                value={option}
+                key={option}
+                selected={option === selected}
+              >
+                {option}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+    );
+  };
+
+  const renderDownloadControl = () => {
+    const downloadFilename = `${Date.now()}-dither.png`;
+    return (
       <div>
-        <label>
-          Dither pattern
-          <select onChange={onChangeDitherPattern}>
-            {options.map((option) => {
-              return (
-                <option
-                  value={option}
-                  key={option}
-                  selected={option === selected}
-                >
-                  {option}
-                </option>
-              );
-            })}
-          </select>
-        </label>
+        <a
+          download={downloadFilename}
+          href={imageData}
+          className="inline-flex items-center px-2 py-2 border border-transparent text-base leading-4 rounded-md shadow-sm text-white bg-slate-500 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500"
+        >
+          Download
+        </a>
       </div>
     );
   };
 
   return (
-    <div>
-      {renderAngleControl()}
-      {renderColorsControl()}
-      {renderStepsControl()}
-      {renderCavasSizeControl()}
-      {renderScaleControl()}
-      {renderDitherModeControl()}
+    <div className="flex flex-col space-y-8">
+      <fieldset>
+        <legend className="font-bold border-b-2 mb-4 block">Gradient</legend>
+        {renderAngleControl()}
+        {renderStepsControl()}
+        {renderColorsControl()}
+      </fieldset>
+      <fieldset>
+        <legend className="font-bold border-b-2 mb-4 block">Dither</legend>
+        {renderDitherModeControl()}
+      </fieldset>
+      <fieldset>
+        <legend className="font-bold border-b-2 mb-4 block">Canvas</legend>
+        {renderCavasSizeControl()}
+        {renderScaleControl()}
+        {renderDownloadControl()}
+      </fieldset>
     </div>
   );
 };
